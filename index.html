@@ -48,10 +48,31 @@
 		</style> 	
 	</head>
 	<body style="background:#333;">
+		<div>
+			<span onclick="vobsub.display('previous')">Previous </span><span onclick="vobsub.display('next')">Next </span>
+		</div>
+		
     	<div class="video">
-        	<video id="video" controls preload="metadata" poster="video/Blended (2014) [1080p]/Blended.2014.1080p.BluRay.x264.YIFY.jpg">
-            	<source src="video/Blended (2014) [1080p]/Blended.2014.1080p.BluRay.x264.YIFY.mp4" type="video/mp4">
+        	<video id="video" controls preload="metadata" width="720"
+			>
+<!-- as long as its id is right, then it becomes dead.
+	poster="video/Blended (2014) [1080p]/Blended.2014.1080p.BluRay.x264.YIFY.jpg"
+			poster="http://192.168.254.171:8080/tomcat.png"
+	
+	            	<source src="video/Blended (2014) [1080p]/Blended.2014.1080p.BluRay.x264.YIFY.mp4" type="video/mp4">
+	            	<source src="http://192.168.254.171:8080/sample-mp4-file.mp4" type="video/mp4">
+-->
        		</video>
        </div>
+<!--
+	   <div>
+        	<video id="video2" controls preload="metadata" width="500" 
+			poster="http://192.168.254.171:8080/tomcat.png"
+			>
+	            	<source src="http://192.168.254.171:8080/sample-mp4-file.mp4" type="video/mp4">
+       		</video>
+
+	   </div>
+-->	   
 	</body>
 </html>

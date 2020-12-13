@@ -9,10 +9,10 @@ function Color(){
 			this.FromHex(arguments[0]);
 			break;
 		case 3:
-			this.FromRGB(arguments[0], arguments[1], arguments[2]);
+			this.FromRGb(arguments[0], arguments[1], arguments[2]);
 			break;
 		case 4:
-			this.FromRGBA(arguments[0], arguments[1], arguments[2], arguments[3]);
+			this.FromRGa(arguments[0], arguments[1], arguments[2], arguments[3]);
 			break;
 	}
 }
@@ -27,8 +27,8 @@ Color.prototype.FromRGb = function(r, g, b){
 	this.Blue  = b;
 }
 
-Color.prototype.FromRGb = function(r, g, b, a){
-	this.FromRGB(r, g, b);
+Color.prototype.FromRGa = function(r, g, b, a){
+	this.FromRGb(r, g, b);
 	this.Alpha = a;
 }
 

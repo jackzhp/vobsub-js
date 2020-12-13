@@ -1,88 +1,98 @@
-function SPUGraphics(x, y, width, height){
+function SPUGraphics(x, y, width, height) {
 	//Public
-	this.Width   = width;
-	this.Height  = height;
-	this.X		 = x;
-	this.Y       = y;
-	this.Time    = 0;
+	this.Width = width;
+	this.Height = height;
+	this.X = x;
+	this.Y = y;
+	this.Time = 0;
 	this.Palette = null;
-	this.Canvas  = null;	
+	this.Canvas = null;
 	this.Context = null;
-	
+
 	//Private
 	this.DrawX = 0;
 	this.DrawY = 0;
-	
+
 	//Setup
 	this.CreateCanvas();
 }
 
-SPUGraphics.prototype.Destruct = function(){
+SPUGraphics.prototype.Destruct = function () {
 	this.Hide();
-	
+
 	delete this.Context;
 	delete this.Canvas;
 }
 
-SPUGraphics.prototype.CreateCanvas = function(){
+SPUGraphics.prototype.CreateCanvas = function () {
 	this.Canvas = document.createElement("canvas");
-	this.Canvas.class  = "subtitle";
-	this.Canvas.width  = this.Width;
+	this.Canvas.class = "subtitle";
+	this.Canvas.width = this.Width;
 	this.Canvas.height = this.Height;
-	
+
 	this.Canvas.style.position = "absolute";
-	this.Canvas.style.top  	   = this.Y +"px";
-	this.Canvas.style.left 	   = this.X +"px";	
-	
-	this.Context = this.Canvas.getContext("2d");	
+	this.Canvas.style.top = (this.Y+50) + "px"; //the space for previous & next button.
+	this.Canvas.style.left = this.X + "px";
+
+	this.Context = this.Canvas.getContext("2d");
 }
 
-SPUGraphics.prototype.Show = function(){
+SPUGraphics.prototype.Show = function () {
 	document.body.appendChild(this.Canvas);
 }
 
-SPUGraphics.prototype.Hide = function(){
+SPUGraphics.prototype.Hide = function () {
 	document.body.removeChild(this.Canvas);
 }
 
-SPUGraphics.prototype.FillPalette = function(colors, palette, alpha){
+SPUGraphics.prototype.FillPalette = function (colors, palette, alpha) {
+	console.log("palette", palette);
+	console.log("alpha", alpha);
 	this.Palette = [];
-	this.Palette.push(this.ComputeColor(colors, palette, alpha, 0));
-	this.Palette.push(this.ComputeColor(colors, palette, alpha, 1));
-	this.Palette.push(this.ComputeColor(colors, palette, alpha, 2));
-	this.Palette.push(this.ComputeColor(colors, palette, alpha, 3));	
+	for (var i = 0; i < 4; i++) {
+		var o;
+		if (true) {
+			o = this.ComputeColor(colors, palette, alpha, i);
+		} else { //if I do this, the whole frame(720x480) becomes white.
+			o = new Color(255, 255, 255, 1);
+		}
+		// var o = color.ToRGB();
+		// console.log("rgb:", o);
+		// return o;
+		this.Palette.push(o.ToRGB());
+	}
 }
 
-SPUGraphics.prototype.ComputeColor = function(colors, palette, alpha, index){
-	var color =	colors[palette[index]];
+SPUGraphics.prototype.ComputeColor = function (colors, palette, alpha, index) {
+	var color = colors[palette[index]];
 	color.ApplyAlpha(alpha[index]);
-	return color.ToRGB();
+	return color;
 }
 
-SPUGraphics.prototype.DrawEven = function(buffer, offset){
+SPUGraphics.prototype.DrawEven = function (buffer, offset) {
 	buffer.Offset = offset;
 	this.Draw(buffer, 0, 0);
 }
 
-SPUGraphics.prototype.DrawOdd = function(buffer, offset){
+SPUGraphics.prototype.DrawOdd = function (buffer, offset) {
 	buffer.Offset = offset;
 	this.Draw(buffer, 0, 1);
 }
 
-SPUGraphics.prototype.Draw = function(buffer, x, y){
+SPUGraphics.prototype.Draw = function (buffer, x, y) {
 	this.DrawX = x;
 	this.DrawY = y;
-	
-	while(this.DrawY < this.Height){
-		if(this.DrawCommand(buffer)){			
+
+	while (this.DrawY < this.Height) {
+		if (this.DrawCommand(buffer)) {
 			buffer.Align();
 		}
 	}
 }
 
-SPUGraphics.prototype.DrawCommand = function(buffer){
+SPUGraphics.prototype.DrawCommand = function (buffer) {
 	var Nibble = buffer.Get4();
-	switch(Nibble){
+	switch (Nibble) {
 		case 0xf:
 		case 0xe:
 		case 0xd:
@@ -97,17 +107,17 @@ SPUGraphics.prototype.DrawCommand = function(buffer){
 		case 0x4:
 			return this.DrawRLE(Nibble);
 	}
-		
-	switch(Nibble){
+
+	switch (Nibble) {
 		case 0x3:
 		case 0x2:
 		case 0x1:
 			Nibble = (Nibble << 4) | buffer.Get4();
 			return this.DrawRLE(Nibble);
 	}
-	
+
 	Nibble = (Nibble << 4) | buffer.Get4();
-	switch(Nibble){
+	switch (Nibble) {
 		case 0x0f:
 		case 0x0e:
 		case 0x0d:
@@ -123,8 +133,8 @@ SPUGraphics.prototype.DrawCommand = function(buffer){
 			Nibble = (Nibble << 4) | buffer.Get4();
 			return this.DrawRLE(Nibble);
 	}
-	
-	switch(Nibble){
+
+	switch (Nibble) {
 		case 0x03:
 		case 0x02:
 		case 0x01:
@@ -132,12 +142,12 @@ SPUGraphics.prototype.DrawCommand = function(buffer){
 			Nibble = (Nibble << 4) | buffer.Get4();
 			return this.DrawRLE(Nibble);
 	}
-	
+
 	Nibble = (Nibble << 4) | buffer.Get4();
 	Nibble = (Nibble << 4) | buffer.Get4();
-	
+
 	buffer.Align();
-	
+
 	return this.DrawToEOL();
 }
 
@@ -146,7 +156,7 @@ SPUGraphics.prototype.DrawCommand = function(buffer){
  *
  * @return bool Returns true if this draw forced a newline false otherwise
  */
-SPUGraphics.prototype.DrawRLE = function(rle){
+SPUGraphics.prototype.DrawRLE = function (rle) {
 	return this.DrawSegment(rle >> 2, rle & 0x3);
 }
 
@@ -156,7 +166,7 @@ SPUGraphics.prototype.DrawRLE = function(rle){
  * @return bool Returns true if this draw forced a newline false otherwise
  */
 
-SPUGraphics.prototype.DrawToEOL = function(){
+SPUGraphics.prototype.DrawToEOL = function () {
 	return this.DrawSegment(this.Width - this.DrawX, 0);
 }
 
@@ -165,15 +175,15 @@ SPUGraphics.prototype.DrawToEOL = function(){
  *
  * @return bool Returns true if this draw forced a newline false otherwise
  */
-SPUGraphics.prototype.DrawSegment = function(length, color){
+SPUGraphics.prototype.DrawSegment = function (length, color) {
 	this.Context.fillStyle = this.Palette[color];
 	this.Context.fillRect(this.DrawX, this.DrawY, length, 1);
-	
+
 	this.DrawX += length;
-	if(this.DrawX == this.Width){
+	if (this.DrawX == this.Width) {
 		this.DrawY += 2;
-		this.DrawX  = 0;
+		this.DrawX = 0;
 		return true;
-	}		
+	}
 	return false;
 }
