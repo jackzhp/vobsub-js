@@ -1,70 +1,76 @@
 <!doctype html>
 <html>
-	<head>
-    	<!-- Page title -->
-	    <title>VidsVideotek</title>
-    
-    	<!-- Meta Data -->
-        <meta charset="utf-8"> 
-        
-        <!-- Javascript -->            
-        <script src="js/Graphics/Color.js"></script>
-        
-        <script src="js/Loader/TextLoader.js"></script>
-		<script src="js/Loader/BinaryLoader.js"></script>
-        
-        <script src="js/Mpeg/VobSub/IDX/IDX.js"></script>
-        <script src="js/Mpeg/VobSub/VobSub.js"></script>
-        
-        <script src="js/Mpeg/PS/PES/SPU/SPUGraphics.js"></script>
-        <script src="js/Mpeg/PS/PES/SPU/SPUControl.js"></script>
-        <script src="js/Mpeg/PS/PES/SPU/SPUPackage.js"></script>
-        
-        <script src="js/Mpeg/PS/PES/PESPackage.js"></script>
-        <script src="js/Mpeg/PS/PSPackage.js"></script>
-        
-        <script src="js/Mpeg/MPEG2Stream.js"></script>
-        <script src="js/Mpeg/MPEG2.js"></script>
-		
-		<script src="js/main.js"></script>
-        
-        <style type="text/css">
+
+<head>
+	<!-- Page title -->
+	<title>VidsVideotek</title>
+
+	<!-- Meta Data -->
+	<meta charset="utf-8">
+
+	<!-- Javascript -->
+	<!-- for OCR -->
+	<script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
+	<!-- for VOBSUB -->
+	<script src="js/Graphics/Color.js"></script>
+
+	<script src="js/Loader/TextLoader.js"></script>
+	<script src="js/Loader/BinaryLoader.js"></script>
+
+	<script src="js/Mpeg/VobSub/IDX/IDX.js"></script>
+	<script src="js/Mpeg/VobSub/VobSub.js"></script>
+
+	<script src="js/Mpeg/PS/PES/SPU/SPUGraphics.js"></script>
+	<script src="js/Mpeg/PS/PES/SPU/SPUControl.js"></script>
+	<script src="js/Mpeg/PS/PES/SPU/SPUPackage.js"></script>
+
+	<script src="js/Mpeg/PS/PES/PESPackage.js"></script>
+	<script src="js/Mpeg/PS/PSPackage.js"></script>
+
+	<script src="js/Mpeg/MPEG2Stream.js"></script>
+	<script src="js/Mpeg/MPEG2.js"></script>
+
+	<script src="js/main.js"></script>
+
+	<style type="text/css">
 		html,
 		body {
-			padding:0;
-			margin:0;
-			width:100%;
-			height:100%;
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			height: 100%;
 		}
-		
+
 		figure {
-			margin:0;
-			background:#000000;
+			margin: 0;
+			background: #000000;
 		}
-		
+
 		.video {
-			position:relative;			
+			position: relative;
 		}
-		</style> 	
-	</head>
-	<body style="background:#333;">
-		<div>
-			<span onclick="vobsub.display('previous')">Previous </span><span onclick="vobsub.display('next')">Next </span>
-		</div>
-		
-    	<div class="video">
-        	<video id="video" controls preload="metadata" width="720"
-			>
-<!-- as long as its id is right, then it becomes dead.
+	</style>
+</head>
+
+<body style="background:#333;">
+	<div>
+		<span onclick="vobsub.display('previous')">Previous </span><span onclick="vobsub.display('next')">Next </span>
+		<br />
+		<span id="subtitle_text"></span>
+	</div>
+
+	<div class="video">
+		<video id="video" controls preload="metadata" width="720">
+			<!-- as long as its id is right, then it becomes dead.
 	poster="video/Blended (2014) [1080p]/Blended.2014.1080p.BluRay.x264.YIFY.jpg"
 			poster="http://192.168.254.171:8080/tomcat.png"
 	
 	            	<source src="video/Blended (2014) [1080p]/Blended.2014.1080p.BluRay.x264.YIFY.mp4" type="video/mp4">
 	            	<source src="http://192.168.254.171:8080/sample-mp4-file.mp4" type="video/mp4">
 -->
-       		</video>
-       </div>
-<!--
+		</video>
+	</div>
+	<!--
 	   <div>
         	<video id="video2" controls preload="metadata" width="500" 
 			poster="http://192.168.254.171:8080/tomcat.png"
@@ -73,6 +79,7 @@
        		</video>
 
 	   </div>
--->	   
-	</body>
+-->
+</body>
+
 </html>

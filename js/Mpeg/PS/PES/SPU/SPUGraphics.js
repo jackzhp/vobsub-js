@@ -27,11 +27,13 @@ SPUGraphics.prototype.Destruct = function () {
 SPUGraphics.prototype.CreateCanvas = function () {
 	this.Canvas = document.createElement("canvas");
 	this.Canvas.class = "subtitle";
+	this.Canvas.id = "subtitle";
 	this.Canvas.width = this.Width;
 	this.Canvas.height = this.Height;
 
 	this.Canvas.style.position = "absolute";
-	this.Canvas.style.top = (this.Y+50) + "px"; //the space for previous & next button.
+	//the space for previous & next button. 50 is not enough if there are 2 lines.
+	this.Canvas.style.top = (this.Y + 80) + "px";
 	this.Canvas.style.left = this.X + "px";
 
 	this.Context = this.Canvas.getContext("2d");
@@ -54,13 +56,20 @@ SPUGraphics.prototype.FillPalette = function (colors, palette, alpha) {
 		if (true) {
 			o = this.ComputeColor(colors, palette, alpha, i);
 		} else { //if I do this, the whole frame(720x480) becomes white.
+			//I found the color #0 is the background, which I see it is black
+			//        the color #1 is the inside color of each character
+			//        the color #2 is the surrounding color of each character.
+			//         #2 & #3 are same.
+			// I put the background color to be same as the surrounding color. OCR is good.
+			// I put the #2 & #3 to be the background color.
 			o = new Color(255, 255, 255, 1);
 		}
-		// var o = color.ToRGB();
-		// console.log("rgb:", o);
-		// return o;
-		this.Palette.push(o.ToRGB());
+		var s = o.ToRGB();
+		console.log("rgb:", o);
+		this.Palette.push(s);
 	}
+	this.Palette[0] = this.Palette[2];  //background to be the surrounding
+	// this.Palette[3] = this.Palette[2] = this.Palette[0]; // surrounding color to be the background color. result: visual is good, but OCR is worse.
 }
 
 SPUGraphics.prototype.ComputeColor = function (colors, palette, alpha, index) {

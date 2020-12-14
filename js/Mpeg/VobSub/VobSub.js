@@ -53,6 +53,18 @@ VobSub.prototype.display = function (idx) {
 	console.log("idx:" + i);
 	that.DisplaySubtitle(that.next.Offset);
 	that.idx = i;
+
+	var e_canvas = document.getElementById("subtitle");
+	Tesseract.recognize(e_canvas, 'jpn', {
+		logger: m => console.log(m)
+	}).then(({ data: { text } }) => { //text => {//
+		console.log(text); //data
+		var e_text = document.getElementById("subtitle_text");
+		e_text.innerText = text;
+	}).catch(e => {
+		console.log("62", e);
+	});
+
 }
 
 
